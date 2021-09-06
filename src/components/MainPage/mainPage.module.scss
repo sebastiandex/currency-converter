@@ -1,0 +1,31 @@
+.mainContainer {
+  height: auto;
+  width: auto;
+  max-width: 800px;
+  margin: 0 auto;
+}
+.inputContainer {
+  height: 34px;
+  width: 200px;
+  text-align: center;
+  font-size: 1.5em;
+}
+.resultContainer {
+  border: 1px solid black;
+  height: 38px;
+  width: 205px;
+  line-height: 40px;
+}
+.currencySelector {
+  height: 40px;
+  width: 100px;
+  text-align: center;
+  padding-left: 10px;
+  font-size: 1em;
+  margin-left: 10px;
+}
+.currencyInputContainer {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}

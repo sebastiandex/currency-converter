@@ -14,6 +14,7 @@ const CurrencyList = ({baseSelectValue, currency, supportedCurrencies}) => {
         <div className={style.mainContainer}>
             <div className={style.label}>1 {baseSelectValue} =</div>
             {currency.map((item) => {
+                //По хорошему это тоже нужно выносить в отдельный компонент, но переиспользовать не будем так что...
                 return (
                     <div
                         key={item[0]}

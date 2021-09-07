@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useState} from "react";
 import style from './converter.module.scss';
 
-const Converter = ({ currency, supportedCurrencies, handleBaseValueSubscribe}) => {
+const Converter = ({currency, supportedCurrencies, handleBaseValueSubscribe}) => {
     const [baseSelectValue, setBaseSelectValue] = useState('RUB');
     const [anotherSelectValue, setAnotherSelectValue] = useState('USD');
     const [result, setResult] = useState(0);
@@ -18,15 +18,15 @@ const Converter = ({ currency, supportedCurrencies, handleBaseValueSubscribe}) =
         }
     }, [anotherSelectValue, baseSelectValue, currency, inputValue]);
 
-    const getIcon = (value) => {
-        //находим иконку для соответсвующего значения
-        return supportedCurrencies.find(el => el.currencyCode === value).icon;
-    };
-
     useEffect(() => {
         getResult();
         handleBaseValueSubscribe(baseSelectValue)
     }, [inputValue, baseSelectValue, anotherSelectValue, getResult, handleBaseValueSubscribe]);
+
+    const getIcon = (value) => {
+        //находим иконку для соответсвующего значения
+        return supportedCurrencies.find(el => el.currencyCode === value).icon;
+    };
 
     if (currency.length && supportedCurrencies.length) {
         return (
@@ -98,10 +98,9 @@ const Converter = ({ currency, supportedCurrencies, handleBaseValueSubscribe}) =
         )
     } else return (
         // на этом месте мог быть красивый прелоадер
-        // и в идеале было бы неплохо добавить фетчинги на запросы
+        // и было бы неплохо добавить фетчинги на запросы
         <div>Loading Currencies....</div>
     )
-
 }
 
 export default (Converter);

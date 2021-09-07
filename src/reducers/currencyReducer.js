@@ -1,61 +1,56 @@
 
 const RECEIVE_CURRENCY = 'receiveCurrency';
-const RECEIVE_ALL_CURRENCIES = 'receiveallCurrencies';
+const RECEIVE_SUPPORTED_CURRENCIES = 'receiveSupportedCurrencies';
 
-export const fetchApiCurrency = (base) => {
-    // console.log('BASE', base)
-    // Оказалось что хитрое апи дает данные по базовой валюте только на платных тарифных планах
+export const fetchApiCurrency = () => {
+    // Оказалось что хитрое апи дает данные по иной базовой валюте только на платных тарифных планах
     // Светлую идею о красивых данных на основе выбранной валюты придется похоронить и считать костылями
     return function (dispatch) {
         // fetch(`https://api.currencyfreaks.com/latest?apikey=0853a988ad7d48de8839e1ed14540dd6&base=${base}`)
         fetch(`https://api.currencyfreaks.com/latest?apikey=0853a988ad7d48de8839e1ed14540dd6`)
             .then(res => res.json())
-            // .then(result => console.log(11111, result));
             .then(result => dispatch(receiveCurrency(result)));
     }
 }
 function receiveCurrency (res) {
-    console.log('res', res)
     return {
         type: RECEIVE_CURRENCY,
         payload: res
     };
 }
-export const fetchAllCurrencies = () => {
+export const fetchSupportedCurrencies = () => {
     return function (dispatch) {
         fetch(`https://api.currencyfreaks.com/supported-currencies`)
             .then(res => res.json())
-            // .then(result => console.log(11111, result));
-            .then(result => dispatch(receiveallCurrencies(result)));
+            .then(result => dispatch(receiveSupportedCurrencies(result)));
     }
 }
-function receiveallCurrencies (res) {
-    console.log('res', res)
+function receiveSupportedCurrencies (res) {
     return {
-        type: RECEIVE_ALL_CURRENCIES,
+        type: RECEIVE_SUPPORTED_CURRENCIES,
         payload: res
     };
 }
 
 export const actions = {
     fetchApiCurrency,
+    fetchSupportedCurrencies,
     receiveCurrency,
-    fetchAllCurrencies
+    receiveSupportedCurrencies,
 };
 
 const ACTION_HANDLERS = {
     [RECEIVE_CURRENCY]: (state, action) => {
-        return ({ ...state, currency: action.payload.rates });
+        return ({ ...state, currency: Object.entries(action.payload.rates) });
     },
-    [RECEIVE_ALL_CURRENCIES]: (state, action) => {
-        return ({ ...state, allCurrencies: action.payload });
+    [RECEIVE_SUPPORTED_CURRENCIES]: (state, action) => {
+        return ({ ...state, supportedCurrencies: action.payload });
     }
 }
 
 const initialState = {
     currency: {},
-    allCurrencies: {},
-    fetching: false
+    supportedCurrencies: {}
 };
 
 export default function currencyReducer(state = initialState, action) {

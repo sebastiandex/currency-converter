@@ -1,100 +1,67 @@
 import React, {useEffect, useState} from "react";
-import style from './mainPage.module.scss';
 import {connect} from 'react-redux';
+import {fetchSupportedCurrencies, fetchApiCurrency} from "../../reducers/currencyReducer";
+import style from './mainPage.module.scss'
+import Converter from "../Converter";
+import CurrencyList from "../CurrencyList";
 
-import {fetchAllCurrencies, fetchApiCurrency} from "../../reducers/currencyReducer";
-
-const MainPage = ({fetchApiCurrency, fetchAllCurrencies, currency, allCurrencies, fetching}) => {
-    const [currentCurrency, setCurrentCurrency] = useState(currency);
+const MainPage = ({fetchSupportedCurrencies, fetchApiCurrency, currency, supportedCurrencies}) => {
+    const [activePage, setActivePage] = useState('converter')
     const [baseSelectValue, setBaseSelectValue] = useState('RUB');
-    const [anotherSelectValue, setAnotherSelectValue] = useState('USD');
-    const [result, setResult] = useState(0)
 
     useEffect(() => {
         fetchApiCurrency();
-    }, [fetchApiCurrency])
+    }, [fetchApiCurrency]);
+    useEffect(() => {
+        fetchSupportedCurrencies();
+    }, [fetchSupportedCurrencies]);
 
-    const getNewNumber = (value) => {
-        const baseOnDollars = 1 / currency[baseSelectValue];
-        const result = baseOnDollars * currency[anotherSelectValue];
-        setResult(result * value) ;
+    const baseValueSubscribe = (value) => {
+        setBaseSelectValue(value)
     }
-if (currency) {
-    const currArr = Object.entries(currency);
-    console.log(currArr)
-    if (currency && currency.rates) {
-
-    }
+    // Изначально открыта страница Конвертера валют
+    // Меняем стейт - отображам компонент со списком
     return (
         <div className={style.mainContainer}>
-            <div className={style.currencyInputContainer}>
-                <input
-                    type={'number'}
-                    className={style.inputContainer}
-                    onChange={(e) => getNewNumber(e.target.value)}
+            <div className={style.navContainer}>
+                <button
+                    className={`${style.navButton} ${activePage === 'converter' ? style.active : ''}`}
+                    onClick={() => setActivePage('converter')}
+                >
+                    Конвертер
+                </button>
+                <button
+                    className={`${style.navButton} ${activePage === 'currencyList' ? style.active : ''}`}
+                    onClick={() => setActivePage('currencyList')}
+                >
+                    Курсы валют к <span>{baseSelectValue}</span>
+                </button>
+            </div>
+            {activePage === 'converter' ? (
+                <Converter
+                    currency={currency}
+                    supportedCurrencies={supportedCurrencies}
+                    handleBaseValueSubscribe={baseValueSubscribe}
                 />
-                <select
-                    className={style.currencySelector}
-                    name="baseCurrency"
-                    onChange={(e) => setBaseSelectValue(e.target.value)}
-                >
-                    {currArr.map((item) => {
-                        return (
-
-                            <option
-                                key={item[0]}
-                                value={item[0]}
-                                onChange={() => setBaseSelectValue(item[0])}
-                                selected={item[0] === baseSelectValue}
-                            >
-                                {item[0]}
-                            </option>
-                        )
-                    })}
-                </select>
-            </div>
-            <div className={style.currencyInputContainer}>
-                <div
-                    className={style.resultContainer}
-                >
-                    {result}
-                </div>
-                <select
-                    className={style.currencySelector}
-                    name="anotherCurrency"
-                    onChange={(e) => setAnotherSelectValue(e.target.value)}
-                >
-                    {currArr.map((item) => {
-                        return (
-                            <option
-                                key={item[0]}
-                                value={item[0]}
-                                onChange={() => setAnotherSelectValue(item[0])}
-                                selected={item[0] === anotherSelectValue}
-                            >
-                                {item[0]}
-                            </option>
-                        )
-                    })}
-                </select>
-            </div>
-            <button>Курсы валют</button>
+            ) : (
+                <CurrencyList
+                    baseSelectValue={baseSelectValue}
+                    supportedCurrencies={supportedCurrencies}
+                    currency={currency}
+                />
+            )}
 
         </div>
     )
-} else return (
-    <div>Loading Currencies....</div>
-)
-
 }
+
 const mapStateToProps = (state) => ({
     currency: state.currency,
-    fetching: state.fetching,
-    allCurrencies: state.allCurrencies
+    supportedCurrencies: state.supportedCurrencies
 });
 const mapDispatchToProps = {
     fetchApiCurrency,
-    fetchAllCurrencies
+    fetchSupportedCurrencies
 };
 
-export default connect (mapStateToProps, mapDispatchToProps)(MainPage);
+export default connect(mapStateToProps, mapDispatchToProps)(MainPage);

@@ -1,31 +1,39 @@
 .mainContainer {
-  height: auto;
-  width: auto;
-  max-width: 800px;
-  margin: 0 auto;
+    font-family: Arial, sans-serif;
+    height: auto;
+    width: 90%;
+    max-width: 500px;
+    display: inline-block;
+    justify-content: center;
+    margin: 20px 0;
 }
-.inputContainer {
-  height: 34px;
-  width: 200px;
-  text-align: center;
-  font-size: 1.5em;
+
+.navContainer {
+    display: flex;
+    margin-bottom: 20px;
+    justify-content: space-between;
 }
-.resultContainer {
-  border: 1px solid black;
-  height: 38px;
-  width: 205px;
-  line-height: 40px;
-}
-.currencySelector {
-  height: 40px;
-  width: 100px;
-  text-align: center;
-  padding-left: 10px;
-  font-size: 1em;
-  margin-left: 10px;
-}
-.currencyInputContainer {
-  display: flex;
-  justify-content: center;
-  margin: 20px 0;
+.navButton {
+    all: unset;
+    border: 1px solid #CCD1D9;
+    border-radius: 5px;
+    height: 40px;
+    width: 48%;
+    cursor: pointer;
+    background-color: white;
+    -webkit-box-shadow: 2px 1px 1px 0 rgba(50, 50, 50, 0.61);
+    -moz-box-shadow:    2px 1px 1px 0 rgba(50, 50, 50, 0.61);
+    box-shadow:         2px 1px 1px 0 rgba(50, 50, 50, 0.61);
+    &:hover {
+        background-color: #E6E6E8;
+
+    }
+    &.active {
+        font-weight: 550;
+        background-color: #E6E6E8;
+    }
+    & span {
+      color: green;
+      font-weight: 550;
+  }
 }
